@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EfsaneSro GM Komut Patcher</title>
+<style>
+  :root {
+    --bg: #060911;
+    --card: #0e1422;
+    --card2: #080c15;
+    --card-hover: #141d31;
+    --line: #1d273f;
+    --line-light: #2c3b5e;
+    --txt: #f1f5f9;
+    --dim: #94a3b8;
+    --faint: #64748b;
+    --ac: #6366f1;
+    --ac2: #8b5cf6;
+    --ac3: #38bdf8;
+    --acsoft: rgba(99, 102, 241, 0.14);
+    --acglow: rgba(99, 102, 241, 0.35);
+    --ok: #10b981;
+    --okbg: rgba(16, 185, 129, 0.10);
+    --okln: rgba(16, 185, 129, 0.35);
+    --warn: #f59e0b;
+    --warnbg: rgba(245, 158, 11, 0.10);
+    --warnln: rgba(245, 158, 11, 0.35);
+    --bad: #f43f5e;
+    --badbg: rgba(244, 63, 94, 0.10);
+    --badln: rgba(244, 63, 94, 0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--txt);
+    background:
+      radial-gradient(1200px 500px at 50% -10%, rgba(99, 102, 241, 0.16), transparent 65%),
+      radial-gradient(900px 450px at 100% 0%, rgba(139, 92, 246, 0.10), transparent 60%),
+      radial-gradient(900px 450px at 0% 0%, rgba(56, 189, 248, 0.08), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 24px 32px;
+    line-height: 1.5;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1580px;
+    margin: 0 auto;
+  }
+
+  /* Üst Başlık ve Dil Çubuğu (Tek Hizada ve Dengeli) */
+  .header-bar {
+    display: grid;
+    grid-template-columns: 180px 1fr 180px;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+  .header-spacer {
+    display: flex;
+    align-items: center;
+  }
+  .hero {
+    text-align: center;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--ac3);
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 8px var(--ok);
+  }
+  .hero h1 {
+    font-size: 2.35rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    background: linear-gradient(120deg, #ffffff 15%, #a5b4fc 55%, #c4b5fd 95%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    color: var(--dim);
+    margin-top: 6px;
+    font-size: 0.98rem;
+  }
+  .hero p b { color: #fff; }
+
+  .top-lang {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .top-lang button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--dim);
+    transition: all 0.18s ease;
+  }
+  .top-lang button:hover {
+    border-color: var(--ac);
+    color: var(--txt);
+  }
+  .top-lang button.on {
+    border-color: var(--ac);
+    color: #fff;
+    background: var(--acsoft);
+    box-shadow: 0 0 14px -4px var(--acglow);
+  }
+  .top-lang svg {
+    width: 20px;
+    height: 14px;
+    border-radius: 2px;
+    display: block;
+  }
+
+  /* Ana Grid: Sol Banner | Orta Alan | Sağ Banner (Tamamı Eşit Boyda) */
+  .layout {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  /* Yan Banner Sütunları: Ana Kartlarla Üstten ve Alttan Tam Hizalı */
+  .side {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 14px;
+    height: 100%;
+  }
+  .bn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #12192b 0%, #0a0f1a 100%);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 96px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    overflow: hidden;
+    position: relative;
+  }
+  .bn:hover {
+    border-color: var(--ac);
+    background: linear-gradient(180deg, #172138 0%, #0d1322 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px var(--acglow);
+  }
+  .bn img {
+    max-width: 100%;
+    max-height: 52px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+  }
+
+  /* Orta İki Sütun: Sol ve Sağ Sütun Tam Eşit Yükseklikte */
+  .main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+  .colstack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    height: 100%;
+  }
+
+  /* Kart Tasarımı */
+  .card {
+    background: linear-gradient(180deg, #111829 0%, #0a0f1a 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+  }
+  .main > .card {
+    height: 100%;
+    justify-content: space-between;
+  }
+  .colstack > .card:last-child {
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .card h2 {
+    font-size: 1.02rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #fff;
+  }
+  .card h2 .n {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--ac), var(--ac2));
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+  .copy-tip {
+    font-size: 0.73rem;
+    color: var(--dim);
+    font-weight: 600;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  /* Komut Tablosu - Tek Satır ve Sabit Yükseklik Garantili */
+  .cmds {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .chead {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 10px;
+    font-size: 0.71rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ac3);
+    padding: 0 4px 2px;
+    text-transform: uppercase;
+  }
+  .crow {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 10px;
+  }
+  .cmd {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    overflow: hidden;
+  }
+  .cmd:hover {
+    border-color: var(--ac);
+    background: var(--card-hover);
+  }
+  .cmd code {
+    font-family: 'Consolas', 'JetBrains Mono', monospace;
+    font-size: 0.79rem;
+    color: #c7d2fe;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cmd .cp-ic {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    opacity: 0.45;
+    transition: 0.15s;
+  }
+  .cmd:hover .cp-ic { opacity: 1; }
+  .cmd.copied, .exr.copied {
+    border-color: var(--ok) !important;
+    background: var(--okbg) !important;
+  }
+
+  /* Bilgi Kutusu */
+  .hint {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 11px;
+    font-size: 0.84rem;
+    color: var(--dim);
+  }
+  .hint b { color: var(--txt); }
+  .kv {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 9px;
+  }
+  .tag {
+    text-align: center;
+    font-size: 0.74rem;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 5px 8px;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+  .tag b { color: #a5b4fc; }
+
+  /* Örnekler Listesi - Sabit Hizalı */
+  .exh {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ac3);
+    text-transform: uppercase;
+    margin: 16px 0 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .exh::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .ex {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .exr {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--ac);
+    border-radius: 10px;
+    padding: 8px 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .exr:hover {
+    border-color: var(--ac);
+    background: var(--card-hover);
+  }
+  .exr code {
+    font-family: 'Consolas', 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #e0e7ff;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .exr .d {
+    font-size: 0.78rem;
+    color: var(--dim);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* 2. Kart: Dropzone & Kontroller */
+  .drop {
+    border: 2px dashed var(--line-light);
+    border-radius: 14px;
+    padding: 26px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    background: var(--card2);
+  }
+  .drop:hover, .drop.over {
+    border-color: var(--ac);
+    background: rgba(99, 102, 241, 0.08);
+  }
+  .drop.has { border-style: solid; }
+  .drop.has.clean { border-color: var(--okln); background: var(--okbg); }
+  .drop.has.patched { border-color: var(--warnln); background: var(--warnbg); }
+  .drop.has.bad { border-color: var(--badln); background: var(--badbg); }
+  .drop .ic { font-size: 2rem; margin-bottom: 6px; }
+  .drop .t { font-weight: 800; font-size: 0.96rem; color: #fff; }
+  .drop .h { color: var(--dim); font-size: 0.8rem; margin-top: 4px; font-family: Consolas, monospace; }
+
+  .chips {
+    display: none;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+  }
+  .chip {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card2);
+    color: var(--dim);
+  }
+  .chip b { color: var(--txt); }
+  .chip.clean { color: var(--ok); border-color: var(--okln); background: var(--okbg); }
+  .chip.patched { color: var(--warn); border-color: var(--warnln); background: var(--warnbg); }
+  .chip.bad { color: var(--bad); border-color: var(--badln); background: var(--badbg); }
+
+  .optrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .sw {
+    position: relative;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+  }
+  .sw input { opacity: 0; width: 0; height: 0; }
+  .sl {
+    position: absolute;
+    inset: 0;
+    background: #25304d;
+    border-radius: 999px;
+    transition: 0.2s;
+  }
+  .sl::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .sw input:checked + .sl { background: linear-gradient(135deg, var(--ac), var(--ac2)); }
+  .sw input:checked + .sl::before { transform: translateX(20px); }
+  .optrow .txt b { display: block; font-size: 0.87rem; color: #fff; }
+  .optrow .txt span { font-size: 0.79rem; color: var(--dim); }
+  .optrow code {
+    background: var(--acsoft);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #c4b5fd;
+    font-family: Consolas, monospace;
+    font-size: 0.84em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  button.main-btn {
+    flex: 1;
+    height: 46px;
+    border: none;
+    border-radius: 11px;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, var(--ac), var(--ac2));
+    transition: all 0.18s ease;
+    box-shadow: 0 8px 20px -8px var(--acglow);
+  }
+  button.main-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+  button.main-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  button.main-btn.done {
+    background: linear-gradient(135deg, #059669, var(--ok));
+  }
+  button.ghost {
+    flex: 0 0 auto;
+    height: 46px;
+    border: 1px solid var(--line);
+    background: var(--card2);
+    color: var(--dim);
+    border-radius: 11px;
+    padding: 0 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  button.ghost:hover:not(:disabled) {
+    color: var(--bad);
+    border-color: var(--badln);
+    background: var(--badbg);
+  }
+  button.ghost:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .log {
+    display: none;
+    margin-top: 12px;
+    background: #04070d;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.65;
+  }
+  .log .l { white-space: pre-wrap; }
+  .log .ok { color: #34d399; }
+  .log .err { color: #fb7185; }
+  .log .warn { color: #fbbf24; }
+  .log .hi { color: #c084fc; font-weight: 700; }
+  .log .d { color: #475569; }
+
+  /* 3. Kart: Adımlar */
+  .steps {
+    counter-reset: s;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .step {
+    counter-increment: s;
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    background: var(--card2);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .step::before {
+    content: counter(s);
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: var(--acsoft);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: #a5b4fc;
+    font-weight: 800;
+    font-size: 0.78rem;
+  }
+  .step div { font-size: 0.84rem; color: var(--dim); }
+  .step b { color: var(--txt); }
+
+  .warnbox {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: #fde68a;
+    background: var(--warnbg);
+    border: 1px solid var(--warnln);
+    border-radius: 10px;
+    padding: 10px 12px;
+    line-height: 1.45;
+  }
+  .warnbox b { color: #fff; }
+
+  .foot {
+    text-align: center;
+    color: var(--faint);
+    font-size: 0.78rem;
+    margin-top: 20px;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.84rem;
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Küçük Ekran Uyumluluğu */
+  @media (max-width: 1380px) {
+    .header-bar { grid-template-columns: 1fr; text-align: center; }
+    .header-spacer { display: none; }
+    .top-lang { justify-content: center; order: -1; }
+    .layout { grid-template-columns: 1fr; }
+    .side {
+      grid-template-rows: none;
+      grid-template-columns: repeat(4, 1fr);
+      height: auto;
+    }
+    .sideL { order: 2; }
+    .main { order: 1; }
+    .sideR { order: 3; }
+  }
+  @media (max-width: 1024px) {
+    .main { grid-template-columns: 1fr; }
+    .side { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    body { padding: 14px 12px 28px; }
+    .hero h1 { font-size: 1.75rem; }
+    .crow, .chead, .kv { grid-template-columns: 1fr; }
+    .chead span:last-child { display: none; }
+    .exr { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .exr .d { text-align: left; }
+    .actions { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Üst Başlık ve Dil Seçimi -->
+  <div class="header-bar">
+    <div class="header-spacer"></div>
+    <div class="hero">
+      <div class="badge"><span class="dot"></span><span data-i18n="badge"></span></div>
+      <h1>EfsaneSro GM Komut Patcher</h1>
+      <p data-i18n="sub"></p>
+    </div>
+    <div class="top-lang">
+      <button id="lg-tr" onclick="setLang('tr')" title="Türkçe">
+        <svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#E30A17"/><circle cx="12" cy="10" r="5.2" fill="#fff"/><circle cx="13.7" cy="10" r="4.1" fill="#E30A17"/><path fill="#fff" d="M17.6 10l3.2-1.04-1.98 2.72v-3.36l1.98 2.72z"/></svg>
+        <span>T&#252;rk&#231;e</span>
+      </button>
+      <button id="lg-en" onclick="setLang('en')" title="English">
+        <svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#012169"/><path d="M0,0 30,20 M30,0 0,20" stroke="#fff" stroke-width="4"/><path d="M0,0 30,20 M30,0 0,20" stroke="#C8102E" stroke-width="2"/><path d="M15,0 V20 M0,10 H30" stroke="#fff" stroke-width="6"/><path d="M15,0 V20 M0,10 H30" stroke="#C8102E" stroke-width="3.5"/></svg>
+        <span>English</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Ana İçerik Düzeni -->
+  <div class="layout">
+    <!-- Sol Banner Sütunu -->
+    <div class="side sideL">
+      <a class="bn" href="https://www.elitepvpers.com" target="_blank" rel="noopener">
+        <img src="https://wsrv.nl/?url=www.elitepvpers.com/images/logo.png" referrerpolicy="no-referrer" onerror="epvpFallback(this)" alt="elitepvpers" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.vsro.org" target="_blank" rel="noopener">
+        <img src="https://www.vsro.org/yedekler/xenforo-logo2x.png" alt="vSRO.org" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.elitepvpers.com" target="_blank" rel="noopener">
+        <img src="https://wsrv.nl/?url=www.elitepvpers.com/images/logo.png" referrerpolicy="no-referrer" onerror="epvpFallback(this)" alt="elitepvpers" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.vsro.org" target="_blank" rel="noopener">
+        <img src="https://www.vsro.org/yedekler/xenforo-logo2x.png" alt="vSRO.org" loading="lazy">
+      </a>
+    </div>
+
+    <!-- Orta Kartlar -->
+    <div class="main">
+      <!-- 1. Kart: Komutlar -->
+      <div class="card">
+        <div>
+          <div class="card-head">
+            <h2><span class="n">1</span><span data-i18n="c1"></span></h2>
+            <span class="copy-tip" data-i18n="copyTip"></span>
+          </div>
+
+          <div class="cmds">
+            <div class="chead">
+              <span data-i18n="self"></span>
+              <span data-i18n="other"></span>
+            </div>
+            <div class="crow">
+              <div class="cmd" onclick="copyCmd(this)"><code>+gold 1000</code><span class="cp-ic">&#128203;</span></div>
+              <div class="cmd" onclick="copyCmd(this)"><code>+gold EfsaneSro 1000</code><span class="cp-ic">&#128203;</span></div>
+            </div>
+            <div class="crow">
+              <div class="cmd" onclick="copyCmd(this)"><code>+sp 1000</code><span class="cp-ic">&#128203;</span></div>
+              <div class="cmd" onclick="copyCmd(this)"><code>+sp EfsaneSro 1000</code><span class="cp-ic">&#128203;</span></div>
+            </div>
+            <div class="crow">
+              <div class="cmd" onclick="copyCmd(this)"><code>+item ITEM_CH_SWORD_10_C_RARE 12</code><span class="cp-ic">&#128203;</span></div>
+              <div class="cmd" onclick="copyCmd(this)"><code>+item EfsaneSro ITEM_CH_SWORD_09_C_RARE 12</code><span class="cp-ic">&#128203;</span></div>
+            </div>
+          </div>
+
+          <div class="hint">
+            <span data-i18n="hint"></span>
+            <div class="kv">
+              <span class="tag" data-i18n="tag1"></span>
+              <span class="tag" data-i18n="tag2"></span>
+              <span class="tag" data-i18n="tag3"></span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="exh" data-i18n="exTitle"></div>
+          <div class="ex">
+            <div class="exr" onclick="copyCmd(this)">
+              <code>+item ITEM_CH_SWORD_10_C_RARE 12</code>
+              <span class="d" data-i18n="ex1"></span>
+            </div>
+            <div class="exr" onclick="copyCmd(this)">
+              <code>+item ITEM_MALL_CURE_SUPERSET_4_BAG 1000</code>
+              <span class="d" data-i18n="ex2"></span>
+            </div>
+            <div class="exr" onclick="copyCmd(this)">
+              <code>+item EfsaneSro ITEM_CH_SPEAR_10_C_RARE 8</code>
+              <span class="d" data-i18n="ex3"></span>
+            </div>
+            <div class="exr" onclick="copyCmd(this)">
+              <code>+item EfsaneSro ITEM_ETC_E0_STONEOFLUCK_BUY 100</code>
+              <span class="d" data-i18n="ex5"></span>
+            </div>
+            <div class="exr" onclick="copyCmd(this)">
+              <code>+gold EfsaneSro 500000</code>
+              <span class="d" data-i18n="ex4"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sağ Sütun: 2. Patch ve 3. Kullanım -->
+      <div class="colstack">
+        <!-- 2. Kart: Patch -->
+        <div class="card">
+          <div class="card-head">
+            <h2><span class="n">2</span><span data-i18n="c2"></span></h2>
+          </div>
+          <div class="drop" id="drop">
+            <div class="ic" id="ic">&#128228;</div>
+            <div class="t" id="dt" data-i18n="drop"></div>
+            <div class="h" id="dh" data-i18n="dropHint"></div>
+            <input type="file" id="fi" accept=".exe" hidden>
+          </div>
+          <div class="chips" id="chips"></div>
+          <div class="optrow">
+            <label class="sw"><input type="checkbox" id="opt-plus" checked><span class="sl"></span></label>
+            <div class="txt"><b data-i18n="optTitle"></b><span data-i18n="optDesc"></span></div>
+          </div>
+          <div class="actions">
+            <button class="main-btn" id="bp" disabled data-i18n="btnPatch"></button>
+            <button class="ghost" id="br" disabled data-i18n="btnRevert"></button>
+          </div>
+          <div class="log" id="log"></div>
+        </div>
+
+        <!-- 3. Kart: Kullanım -->
+        <div class="card">
+          <div>
+            <div class="card-head">
+              <h2><span class="n">3</span><span data-i18n="c3"></span></h2>
+            </div>
+            <div class="steps">
+              <div class="step"><div data-i18n="s1"></div></div>
+              <div class="step"><div data-i18n="s2"></div></div>
+              <div class="step"><div data-i18n="s3"></div></div>
+              <div class="step"><div data-i18n="s4"></div></div>
+            </div>
+          </div>
+          <div class="warnbox" data-i18n="warn"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sağ Banner Sütunu -->
+    <div class="side sideR">
+      <a class="bn" href="https://www.elitepvpers.com" target="_blank" rel="noopener">
+        <img src="https://wsrv.nl/?url=www.elitepvpers.com/images/logo.png" referrerpolicy="no-referrer" onerror="epvpFallback(this)" alt="elitepvpers" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.vsro.org" target="_blank" rel="noopener">
+        <img src="https://www.vsro.org/yedekler/xenforo-logo2x.png" alt="vSRO.org" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.elitepvpers.com" target="_blank" rel="noopener">
+        <img src="https://wsrv.nl/?url=www.elitepvpers.com/images/logo.png" referrerpolicy="no-referrer" onerror="epvpFallback(this)" alt="elitepvpers" loading="lazy">
+      </a>
+      <a class="bn" href="https://www.vsro.org" target="_blank" rel="noopener">
+        <img src="https://www.vsro.org/yedekler/xenforo-logo2x.png" alt="vSRO.org" loading="lazy">
+      </a>
+    </div>
+  </div>
+
+  <div class="foot" data-i18n="foot"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+// Elitepvpers orijinal logo yüklenemezse birebir orijinal kalkanlı elite*pvpers logosunu basar
+const EPVP_ORIG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <defs>
+    <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5d061"/>
+      <stop offset="50%" stop-color="#c89116"/>
+      <stop offset="100%" stop-color="#6e4803"/>
+    </linearGradient>
+    <linearGradient id="tx" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#b8c2d8"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8, 6)">
+    <path d="M22 2 L40 8 L40 24 C40 36 22 44 22 46 C22 44 4 36 4 24 L4 8 Z" fill="#10131a" stroke="url(#sh)" stroke-width="2.5"/>
+    <path d="M22 6 L36 11 L36 23 C36 33 22 39 22 41 C22 39 8 33 8 23 L8 11 Z" fill="#181c26" stroke="#ffffff" stroke-opacity="0.15" stroke-width="1"/>
+    <polygon points="22,11 25,19 33,19 26.5,24 29,32 22,27 15,32 17.5,24 11,19 19,19" fill="url(#sh)"/>
+  </g>
+  <text x="58" y="36" font-family="Trebuchet MS, Arial, sans-serif" font-weight="900" font-size="24" fill="url(#tx)" letter-spacing="-0.5">elite<tspan fill="#e5a91a">*</tspan>pvpers</text>
+  <text x="60" y="48" font-family="Arial, sans-serif" font-weight="700" font-size="8.5" fill="#7c8aa8" letter-spacing="2.2">MMO INSIDER FORUMS</text>
+</svg>`);
+
+function epvpFallback(img) {
+  if (!img.dataset.triedDirect) {
+    img.dataset.triedDirect = "1";
+    img.src = "https://www.elitepvpers.com/images/logo.png";
+  } else {
+    img.onerror = null;
+    img.src = EPVP_ORIG_SVG;
+  }
+}
+
+const I18N={
+ tr:{
+  badge:"CANLI GM KOMUTLARI",
+  sub:'SR_GameServer.exe &rarr; sohbet kutusundan canl&#305; <b>alt&#305;n / sp / item</b>',
+  c1:"Komutlar", self:"KEND\u0130NE", other:"BA\u015eKA KARAKTERE",
+  copyTip:"\ud83d\udccb Kopyalamak i\u00e7in komuta t\u0131kla",
+  copied:"\u2705 Kopyaland\u0131: ",
+  hint:'Sohbet kutusuna yaz &mdash; komut <b>g&#246;r&#252;nmez</b>, an&#305;nda i&#351;ler (relog/&#305;&#351;&#305;nlanma yok). Sadece <b>GM rank</b>.',
+  tag1:'<b>+item</b> equip &rarr; de&#287;er = +plus', tag2:'<b>+item</b> stackable &rarr; de&#287;er = adet', tag3:'gold/sp &rarr; sa&#287;-alt bildirim',
+  exTitle:"\u00d6rnekler",
+  ex1:"&rarr; +12 k&#305;l&#305;&#231; (equip &mdash; de&#287;er = plus)",
+  ex2:"&rarr; 1000 adet iksir (stackable &mdash; de&#287;er = adet)",
+  ex3:"&rarr; EfsaneSro karakterine +8 m&#305;zrak",
+  ex5:"&rarr; EfsaneSro karakterine 100 adet ta&#351; (stackable)",
+  ex4:"&rarr; EfsaneSro karakterine 500.000 alt&#305;n",
+  c2:"Patch",
+  drop:"SR_GameServer.exe s&#252;r&#252;kle veya t&#305;kla", dropHint:"beklenen 11.6 MB (0xBA1000)",
+  optTitle:"Equip +N (plus) deste&#287;i", optDesc:'A&#231;&#305;k: <code>+item ... SWORD 12</code> = +12. Kapal&#305;: equip +0 d&#252;&#351;er.',
+  btnPatch:"&#9889; Patchle &amp; &#304;ndir", btnRevert:"Geri Al", btnDone:"&#9989; Yamaland&#305;",
+  c3:"Kullan&#305;m",
+  s1:'<b>Server\'lar&#305; kapat.</b> SR_GameServer.exe a&#231;&#305;kken yamalanamaz.',
+  s2:'Yukar&#305;dan <b>orijinal SR_GameServer.exe</b>\'yi se&#231;ip <b>Patchle &amp; &#304;ndir</b>\'e bas.',
+  s3:'&#304;nen dosyay&#305; <b>her GS klas&#246;r&#252;ne</b> (GS1&hellip;GS4) kopyala, &#252;zerine yaz.',
+  s4:'Server\'lar&#305; a&#231; &mdash; GM karakterle komutlar&#305; dene.',
+  warn:'&#9888;&#65039; &#304;mza uyu&#351;mazsa i&#351;lem iptal edilir, dosyan bozulmaz. Yanl&#305;&#351;l&#305;kla yamaland&#305;ysa <b>Geri Al</b> temizler. Her &#351;ey taray&#305;c&#305;da olur, dosya hi&#231;bir yere y&#252;klenmez.',
+  foot:'Yaln&#305;zca Rigid SR_GameServer.exe i&#231;in &middot; base md5 f862915710&hellip;',
+  clean:"temiz", patched:"yamal&#305;", bad:"uyumsuz",
+  lNotExe:"\u274c Sadece .exe", lNotPE:"\u274c PE de\u011fil (MZ yok)", lSize:"\u26a0\ufe0f Boyut {0} (beklenen {1})",
+  lSig:"\u274c imza uyu\u015fmuyor: ", lNotRigid:"\u2192 Beklenen Rigid SR_GameServer.exe de\u011fil. \u0130PTAL.",
+  lAll:"\u2139\ufe0f Zaten tam yamal\u0131.", lPart:"\u2139\ufe0f K\u0131smen yamal\u0131; Patchle eksikleri tamamlar.", lReady:"\u2705 Temiz exe, haz\u0131r.",
+  lPatch:"\ud83d\udd27 Yamalan\u0131yor\u2026", lAbort:"\u274c imza uyu\u015fmuyor, iptal.", lSkip:"\u23ed\ufe0f zaten: ",
+  lEqOff:"\u2139\ufe0f Equip +N kapal\u0131 \u2014 equip item +0 d\u00fc\u015fer.", lWrote:"{0} blok yaz\u0131ld\u0131. \u0130ndiriliyor\u2026",
+  lDl:"\u2b07\ufe0f {0} indirildi. 4 GS klas\u00f6r\u00fcne kopyala (server kapal\u0131).",
+  lRev:"\u21b0 Geri al\u0131n\u0131yor\u2026", lRevd:"{0} blok geri al\u0131nd\u0131. \u0130ndiriliyor\u2026", lFile:"\ud83d\udcc1 "
+ },
+ en:{
+  badge:"LIVE GM COMMANDS",
+  sub:'SR_GameServer.exe &rarr; live <b>gold / sp / item</b> from the chat box',
+  c1:"Commands", self:"YOURSELF", other:"ANOTHER CHARACTER",
+  copyTip:"\ud83d\udccb Click any command to copy",
+  copied:"\u2705 Copied: ",
+  hint:'Type in the chat box &mdash; the command is <b>hidden</b>, works instantly (no relog/teleport). <b>GM rank only</b>.',
+  tag1:'<b>+item</b> equip &rarr; value = +plus', tag2:'<b>+item</b> stackable &rarr; value = quantity', tag3:'gold/sp &rarr; bottom-right notice',
+  exTitle:"Examples",
+  ex1:"&rarr; +12 sword (equip &mdash; value = plus)",
+  ex2:"&rarr; 1000x potion (stackable &mdash; value = quantity)",
+  ex3:"&rarr; +8 spear to character EfsaneSro",
+  ex5:"&rarr; 100x stone to character EfsaneSro (stackable)",
+  ex4:"&rarr; 500,000 gold to character EfsaneSro",
+  c2:"Patch",
+  drop:"Drop or click SR_GameServer.exe", dropHint:"expected 11.6 MB (0xBA1000)",
+  optTitle:"Equip +N (plus) support", optDesc:'On: <code>+item ... SWORD 12</code> = +12. Off: equip drops at +0.',
+  btnPatch:"&#9889; Patch &amp; Download", btnRevert:"Revert", btnDone:"&#9989; Patched",
+  c3:"How to use",
+  s1:'<b>Close the servers.</b> Can\'t patch while SR_GameServer.exe is running.',
+  s2:'Pick the <b>original SR_GameServer.exe</b> above and hit <b>Patch &amp; Download</b>.',
+  s3:'Copy the downloaded file into <b>every GS folder</b> (GS1&hellip;GS4), overwrite it.',
+  s4:'Start the servers &mdash; try the commands with a GM character.',
+  warn:'&#9888;&#65039; If the signature doesn\'t match it aborts &mdash; your file isn\'t touched. Patched by mistake? <b>Revert</b> cleans it. Everything runs in your browser; the file is never uploaded.',
+  foot:'Only for Rigid SR_GameServer.exe &middot; base md5 f862915710&hellip;',
+  clean:"clean", patched:"patched", bad:"mismatch",
+  lNotExe:"\u274c .exe only", lNotPE:"\u274c Not PE (no MZ)", lSize:"\u26a0\ufe0f Size {0} (expected {1})",
+  lSig:"\u274c signature mismatch: ", lNotRigid:"\u2192 Not the expected Rigid SR_GameServer.exe. ABORTED.",
+  lAll:"\u2139\ufe0f Already fully patched.", lPart:"\u2139\ufe0f Partially patched; Patch completes the rest.", lReady:"\u2705 Clean exe, ready.",
+  lPatch:"\ud83d\udd27 Patching\u2026", lAbort:"\u274c signature mismatch, aborted.", lSkip:"\u23ed\ufe0f already: ",
+  lEqOff:"\u2139\ufe0f Equip +N off \u2014 equip items drop at +0.", lWrote:"{0} blocks written. Downloading\u2026",
+  lDl:"\u2b07\ufe0f {0} downloaded. Copy to all 4 GS folders (servers closed).",
+  lRev:"\u21b0 Reverting\u2026", lRevd:"{0} blocks reverted. Downloading\u2026", lFile:"\ud83d\udcc1 "
+ }
+};
+
+let lang="tr";
+try{lang=localStorage.getItem("lang")||"tr";}catch(e){}
+function t(k){return (I18N[lang]||I18N.tr)[k];}
+function setLang(l){
+  lang=l;
+  try{localStorage.setItem("lang",l);}catch(e){}
+  document.documentElement.lang=l;
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.innerHTML=t(e.dataset.i18n));
+  document.getElementById("lg-tr").classList.toggle("on",l==="tr");
+  document.getElementById("lg-en").classList.toggle("on",l==="en");
+  const bp=document.getElementById("bp");
+  if(bp.dataset.done==="1")bp.innerHTML=t("btnDone");
+}
+
+let toastTimer=null;
+function copyCmd(el){
+  const codeEl=el.querySelector("code");
+  if(!codeEl)return;
+  const txt=codeEl.textContent.trim();
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt);
+  }else{
+    const ta=document.createElement("textarea");
+    ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+  }
+  el.classList.add("copied");
+  setTimeout(()=>el.classList.remove("copied"),600);
+  const toast=document.getElementById("toast");
+  toast.textContent=t("copied")+txt;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove("show"),2000);
+}
+
+const EXE_SIZE=0xBA1000;
+const CAVE_HEX="8d44241c8b481883f90872058b4004eb0383c004668b086683f92f74066683f92b750383c002668b086683c9206683f96774116683f97374596683f969747ee9fe020000668b50026683ca206683fa6f0f85ec020000668b50046683ca206683fa6c0f85da020000668b50066683ca206683fa640f85c8020000668b50086683fa200f85ba0200008d500ab901000000eb79668b50026683ca206683fa707405e99d020000668b50046683fa200f858f0200008d5006b902000000eb4e668b50026683ca206683fa740f8573020000668b50046683ca206683fa650f8561020000668b50066683ca206683fa6d0f854f020000668b50086683fa200f85410200008d500ab904000000eb0052518b168bceff521c85c0595a0f8424020000558bec535781ec500100008bd983fb040f8495000000668b026683f83072136683f839770d8975f4e8020200008945f0eb488d8d60ffffff668b026685c074116683f820740888014183c202ebea83c202c60100e8d60100008945f08d8560ffffff50b8b0fe5300ffd083c40485c00f849e0100008945f4eb008b4df48b45f083fb017402eb156a016a016a006a0050b8b0545b00ffd0e9790100006a0150b8c0555b00ffd0e96a010000668b026683c8206683f869755f668b42026683c8206683f8747551668b42046683c8206683f8657543668b42066683c8206683f86d75358975f48d8df0feffff33ff668b026685c074126683f82074098801414783c202ebe983c202c60100897de8e81d0100008945f0eb6e8d8d60ffffff668b026685c074116683f820740888014183c202ebea83c202c601008d8df0feffff33ff668b026685c074126683f82074098801414783c202ebe983c202c60100897de8e8c90000008945f08d8560ffffff50b8b0fe5300ffd083c40485c00f84910000008945f48dbdc0feffffc70700000000c7471400000000c747180f0000008b45e8508d85f0feffff508bcfb8b01d4800ffd08d85c0feffff508b0dd0040a01b8f0bb4a00ffd085c074488b9080000000c1ea0a83e23f8b4df083fa0175098bc1b901000000eb0233c06a00506a016a006a006a006a006a008d55ec52518d95f0feffff526a008b4df4b8a0b75d00ffd0eb02eb0081c4500100005f5b5d68c6995700c3807c241801680e935700c35333db668b026683f820750583c202ebf2668b026683e8306683f809770d0fb7c06bdb0a03d883c202ebe68bc35bc3";
+const OPS_CORE=[{foff:0x0F9309,len:5,clean:"807c241801",patched:"e9822e8300",name:"Hook"},{foff:0x92C190,len:CAVE_HEX.length/2,cleanZero:true,patched:CAVE_HEX,name:"Codecave"}];
+const OPS_PLUS=[{foff:0x15B944,len:6,clean:"0f8447060000",patched:"909090909090",name:"Gate NOP 1"},{foff:0x15B952,len:6,clean:"0f8539060000",patched:"909090909090",name:"Gate NOP 2"},{foff:0x15BC76,len:26,clean:"8d4c242ce84193eeff85c0750d8d4c242ce8f492eeff85c07403",patched:"90".repeat(26),name:"Optlevel NOP"}];
+
+let buf=null,fname="";
+const $=id=>document.getElementById(id);
+function h2b(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a;}
+function rhex(o,l){let s="";for(let i=0;i<l;i++)s+=buf[o+i].toString(16).padStart(2,"0");return s;}
+function zero(o,l){for(let i=0;i<l;i++)if(buf[o+i]!==0)return false;return true;}
+function log(m,c){const L=$("log");L.style.display="block";const d=document.createElement("div");d.className="l "+(c||"");d.innerHTML=m;L.appendChild(d);L.scrollTop=L.scrollHeight;}
+function clg(){$("log").innerHTML="";}
+function stt(op){const c=rhex(op.foff,op.len);if(c===op.patched.toLowerCase())return"patched";if(op.cleanZero)return zero(op.foff,op.len)?"clean":"bad";return c===op.clean.toLowerCase()?"clean":"bad";}
+
+const drop=$("drop"),fi=$("fi");
+drop.onclick=()=>fi.click();
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("over");};
+drop.ondragleave=()=>drop.classList.remove("over");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");if(e.dataTransfer.files[0])load(e.dataTransfer.files[0]);};
+fi.onchange=e=>{if(e.target.files[0])load(e.target.files[0]);};
+
+function load(f){
+  if(!f.name.toLowerCase().endsWith(".exe")){clg();log(t("lNotExe"),"err");return;}
+  clg();fname=f.name;const r=new FileReader();
+  r.onload=ev=>{
+    buf=new Uint8Array(ev.target.result);
+    $("ic").textContent="\ud83d\udce6";
+    $("dt").textContent=fname+"  ("+(buf.length/1048576).toFixed(2)+" MB)";
+    $("dh").textContent="\u2713";
+    verify();
+  };
+  r.readAsArrayBuffer(f);
+}
+
+function setDrop(c){drop.className="drop has "+c;}
+
+function verify(){
+  clg();log(t("lFile")+fname,"hi");
+  $("chips").style.display="none";$("chips").innerHTML="";
+  if(buf[0]!==0x4D||buf[1]!==0x5A){log(t("lNotPE"),"err");dis();setDrop("bad");return;}
+  if(buf.length!==EXE_SIZE)log(t("lSize").replace("{0}",buf.length).replace("{1}",EXE_SIZE),"warn");
+  let bad=false,allP=true,anyP=false;const ch=[];
+  for(const op of OPS_CORE.concat(OPS_PLUS)){
+    const s=stt(op);
+    ch.push('<span class="chip '+s+'"><b>'+op.name+'</b> '+t(s)+'</span>');
+    if(s==="bad"){bad=true;log(t("lSig")+op.name,"err");}
+    if(s!=="patched")allP=false;else anyP=true;
+  }
+  $("chips").innerHTML=ch.join("");$("chips").style.display="flex";
+  if(bad){log(t("lNotRigid"),"err");dis();setDrop("bad");return;}
+  $("bp").disabled=false;$("br").disabled=!anyP;
+  const bp=$("bp");bp.dataset.done="0";bp.innerHTML=t("btnPatch");bp.classList.remove("done");
+  if(allP){log(t("lAll"),"warn");setDrop("patched");}
+  else if(anyP){log(t("lPart"),"warn");setDrop("patched");}
+  else{log(t("lReady"),"ok");setDrop("clean");}
+}
+
+function dis(){$("bp").disabled=true;$("br").disabled=true;}
+function ap(op){buf.set(h2b(op.cleanZero?CAVE_HEX:op.patched),op.foff);}
+function rv(op){if(op.cleanZero){for(let i=0;i<op.len;i++)buf[op.foff+i]=0;}else buf.set(h2b(op.clean),op.foff);}
+
+$("bp").onclick=()=>{
+  if(!buf)return;clg();log(t("lPatch"),"hi");
+  for(const op of OPS_CORE.concat(OPS_PLUS))if(stt(op)==="bad"){log(t("lAbort"),"err");return;}
+  const ops=OPS_CORE.concat($("opt-plus").checked?OPS_PLUS:[]);let n=0;
+  for(const op of ops){if(stt(op)==="patched"){log(t("lSkip")+op.name,"warn");continue;}ap(op);n++;log("\u2705 "+op.name,"ok");}
+  if(!$("opt-plus").checked)log(t("lEqOff"),"warn");
+  log("\u2500".repeat(24),"d");log(t("lWrote").replace("{0}",n),"hi");dl("SR_GameServer.exe");
+  const bp=$("bp");bp.dataset.done="1";bp.innerHTML=t("btnDone");bp.classList.add("done");$("br").disabled=false;
+};
+
+$("br").onclick=()=>{
+  if(!buf)return;clg();log(t("lRev"),"hi");let n=0;
+  for(const op of OPS_CORE.concat(OPS_PLUS))if(stt(op)==="patched"){rv(op);n++;log("\u21b0 "+op.name,"ok");}
+  log(t("lRevd").replace("{0}",n),"hi");dl("SR_GameServer.exe");
+  const bp=$("bp");bp.dataset.done="0";bp.innerHTML=t("btnPatch");bp.classList.remove("done");
+};
+
+function dl(name){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([buf],{type:"application/octet-stream"}));
+  a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  log(t("lDl").replace("{0}",name),"ok");
+}
+
+setLang(lang);
+</script>
+</body>
+</html>
